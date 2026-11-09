@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA = process.env.STATS_FILE || path.join(__dirname, 'stats.json');
-const NAMES = { P: 'ساعة الحنين', N: 'ساعة الأمس', H: 'ساعة الآن', F: 'ساعة النصيب', U: 'ساعة الغد' };
+const NAMES = { P: 'ساعة الحنين', N: 'ساعة الأمس', H: 'ساعة الآن', F: 'ساعة الانتظار', U: 'ساعة الغد' };
 
 let stats = { visits: 0, starts: 0, done: 0, top: { P: 0, N: 0, H: 0, F: 0, U: 0 }, balSum: 0 };
 try { stats = Object.assign(stats, JSON.parse(fs.readFileSync(DATA, 'utf8'))); } catch (e) {}
