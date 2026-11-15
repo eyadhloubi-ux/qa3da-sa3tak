@@ -264,6 +264,7 @@ button,input{font-family:inherit}
 .refs ul{margin:8px 0 0;padding-inline-start:18px;display:flex;flex-direction:column;gap:4px}
 .rfoot{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);padding:4px 2px}
 .rfoot b{color:var(--ink);direction:ltr;unicode-bidi:isolate}
+.rfoot .tag{direction:ltr;unicode-bidi:isolate;font-weight:600}
 .rfoot .pg{display:inline-flex;align-items:center;padding:5px 10px;border-radius:10px;background:#F6F1E7;border:2px solid #1C1A17;box-shadow:3px 3px 0 #1C1A17}
 .rfoot .pg svg{width:64px;height:25px;display:block}
 .toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:60;opacity:0;transition:opacity .3s;pointer-events:none}
@@ -431,8 +432,8 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 
 /* ===== الألوان ===== */
 const PAL={
- L:{bg:'#F4F5F8',ink:'#1D2230',mut:'#6E7385',card:'#FFFFFF',line:'#E2E4EB',acc:'#A6453B',i:{P:'#AE873A',N:'#6E5A80',H:'#3D7D77',F:'#5F6B7C',U:'#2F5A86'}},
- D:{bg:'#0F1028',ink:'#F3F1FF',mut:'#A7ABD6',card:'#181A3A',line:'#2C2F5E',acc:'#FF7A59',i:{P:'#FFC24B',N:'#C08CFF',H:'#2FE3B5',F:'#B7C0E0',U:'#4FC3FF'}}
+ L:{bg:'#F4F5F8',ink:'#1D2230',mut:'#6E7385',card:'#FFFFFF',line:'#E2E4EB',acc:'#A6453B',i:{P:'#AE873A',N:'#B0506E',H:'#3D7D77',F:'#5F6B7C',U:'#2F5A86'}},
+ D:{bg:'#0B1622',ink:'#F1F6FA',mut:'#9FB2C4',card:'#122232',line:'#22384C',acc:'#FF7A59',i:{P:'#FFC24B',N:'#FF8FB1',H:'#2FE3B5',F:'#B9C6D6',U:'#4FC3FF'}}
 };
 
 /* ===== العقارب الخمسة ===== */
@@ -667,7 +668,7 @@ function drawLogo(x,X,Y,W){
  x.restore();
 }
 /* اسم صفحة قعدة: اللوغو على ملصق كريمي، يمين بالزاوية R */
-const PAGE_NAME='قعدة';
+const PAGE_NAME='قعدة',HASHTAG='#qa3da';
 function pageSticker(x,R,cy,h){const lw=h*1.9,w=lw+h*.5,X=R-w,Y=cy-h/2;
  rr(x,X+5,Y+5,w,h,h*.24);x.fillStyle=INK;x.fill();rr(x,X,Y,w,h,h*.24);x.fillStyle=CRM;x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke();
  drawLogo(x,X+h*.25,Y+(h-lw*161/415)/2,lw);}
@@ -966,7 +967,7 @@ function vResult(){
    <li>النتيجة للتأمل والاكتشاف، لا للتشخيص.</li></ul></details>
   <div class="card"><h3>خذ القعدة معك</h3><div class="acts"><button class="ghost" id="offl">${svg('dl')}نزّل نسخة أوفلاين</button></div><p class="hint">النسخة الأوفلاين ملف واحد يعمل على جهازك بلا إنترنت، حتى لو أرسلته لغيرك.</p></div>
   <button class="ghost" data-act="restart">${svg('redo')}ابدأ من جديد</button>
-  <div class="rfoot">${PAGE_HTML}<b>@eyad.hloubi</b></div>
+  <div class="rfoot"><span class="tag">${HASHTAG}</span><b>@eyad.hloubi</b></div>
  </section>`;
 }
 function bindResult(){
@@ -1114,21 +1115,25 @@ function shadowCard(x,P,X,Y,W,H,r){x.save();x.shadowColor='rgba(0,0,0,.14)';x.sh
 /* سطر الهوية بالأسفل: أيقونة القعدة واسمها، وكرسي العيلة، والحساب */
 function brandRow(x,P,y,L,R){
  L=L||80;R=R||1000;const cy=y+50;
- pageSticker(x,R,cy,76);
- x.save();x.direction='ltr';x.textAlign='left';x.textBaseline='middle';x.font=`600 34px ${FT}`;x.fillStyle=P.ink;x.fillText('@eyad.hloubi',L,cy);x.restore();
+ x.save();x.textBaseline='middle';x.font=`600 34px ${FT}`;x.fillStyle=P.ink;x.direction='ltr';
+ x.textAlign='left';x.fillText('@eyad.hloubi',L,cy);
+ x.textAlign='right';x.fillStyle=P.mut;x.fillText(HASHTAG,R,cy);x.restore();
 }
 function drawStory(lay,theme){
  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const x=cv.getContext('2d');
  const P=pal(theme),k=CUR.ord[0],lc=P.i[k];let y;
  bgStory(x,P,lc);
  if(lay==='cover'){
-  /* ساعة حائط: الصورة على عرض الصورة فوق، والساعة بطلة الصورة جوّا بطاقة */
-  const ph=560;
-  face(x,P,0,0,1080,ph,k);
-  drawIcon(x,1080-80-112,ST_T,112);
-  const gr=x.createLinearGradient(0,ph-300,0,ph);gr.addColorStop(0,P.bg+'00');gr.addColorStop(1,P.bg);x.fillStyle=gr;x.fillRect(0,ph-300,1080,302);
-  if(S.name){x.save();x.shadowColor=P.bg;x.shadowBlur=34;txt(x,{t:S.name,s:100,w:800,f:FD,c:P.ink,x:540,y:470,mw:960,min:56});y=txt(x,{t:S.name,s:100,w:800,f:FD,c:P.ink,x:540,y:470,mw:960,min:56})+18;x.restore()}else y=ph+10;
-  y=resBlock(x,P,y,960);
+  /* ساعة حائط: الصورة كاملة بإطار معلّق بمسمار وخيط، والساعة بطلة الصورة تحتها */
+  const fs2=400,fw=fs2+36,fx=540-fw/2,fy=150;
+  x.strokeStyle=P.mut;x.lineWidth=3;x.beginPath();x.moveTo(fx+60,fy+4);x.lineTo(540,fy-62);x.lineTo(fx+fw-60,fy+4);x.stroke();
+  x.beginPath();x.arc(540,fy-64,10,0,7);x.fillStyle=P.ink;x.fill();
+  x.save();x.shadowColor='rgba(0,0,0,.28)';x.shadowBlur=46;x.shadowOffsetY=20;rr(x,fx,fy,fw,fw,30);x.fillStyle=lc;x.fill();x.restore();
+  rr(x,fx+8,fy+8,fw-16,fw-16,24);x.fillStyle=P.card;x.fill();
+  x.save();rr(x,fx+18,fy+18,fs2,fs2,18);x.clip();face(x,P,fx+18,fy+18,fs2,fs2,k);x.restore();
+  y=fy+fw+34;
+  if(S.name)y=txt(x,{t:S.name,s:88,w:800,f:FD,c:P.ink,x:540,y,mw:960,min:52})+16;
+  y=resBlock(x,P,y,960,{label:false});
   const ct=y+26,cb=1540;shadowCard(x,P,60,ct,960,cb-ct,48);
   clock(x,P,80,ct+12,920,cb-ct-24,CUR,28,1,0);
   brandRow(x,P,ST_B-100);
@@ -1141,7 +1146,6 @@ function drawStory(lay,theme){
   if(S.name)txt(x,{t:S.name,s:62,w:800,f:FD,c:'#1D2230',x:0,y:-pht/2+32+ps+24,mw:ps,min:36});
   x.save();x.translate(0,-pht/2-6);x.rotate(.06);x.fillStyle=lc;x.globalAlpha=.55;x.fillRect(-84,-22,168,44);x.restore();
   x.restore();
-  drawIcon(x,80,ST_T,112);
   y=resBlock(x,P,py+pht+44,960,{label:false});
   clock(x,P,60,y+18,960,1550-(y+18),CUR,28,1,0);
   brandRow(x,P,ST_B-100);
@@ -1152,7 +1156,7 @@ function drawStory(lay,theme){
   x.save();rr(x,L,T,W,H,R2);x.clip();x.fillStyle=lc;x.fillRect(L,T,W,232);
   x.globalAlpha=.14;x.strokeStyle='#fff';x.lineWidth=3;for(let i=-4;i<30;i++){x.beginPath();x.moveTo(L+i*44,T);x.lineTo(L+i*44+232,T+232);x.stroke()}x.globalAlpha=1;x.restore();
   txt(x,{t:'تذكرة زمن',s:36,w:800,f:FD,c:bt,x:L+W-52,y:ST_T+6,mw:400,al:'right'});
-  drawIcon(x,L+44,ST_T-8,100);
+  txt(x,{t:'محطة واحدة: ساعتي',s:26,w:600,c:bt,x:L+52,y:ST_T+12,mw:400,al:'left'});
   const r=96,cy=T+232+20;avatar(x,P,540,cy,r,k);
   y=cy+r+40;
   if(S.name)y=txt(x,{t:S.name,s:76,w:800,f:FD,c:P.ink,x:540,y,mw:860,min:46})+18;
