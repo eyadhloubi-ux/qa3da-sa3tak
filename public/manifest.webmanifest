@@ -1,0 +1,16 @@
+{
+  "name": "قعدة ساعتك",
+  "short_name": "قعدة ساعتك",
+  "description": "على أي ساعة تعيش؟ اكتشف ساعتك الداخلية · إعداد م. إياد حلوبي",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F5F8",
+  "theme_color": "#7A5C8E",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
