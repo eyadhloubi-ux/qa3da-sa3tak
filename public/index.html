@@ -36,6 +36,10 @@ button,input{font-family:inherit}
 
 .bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .bg span{position:absolute;border-radius:50%;filter:blur(80px);opacity:.2;transition:background-color 1.2s}
+:root.dk .bg span{opacity:.34;filter:blur(70px)}
+:root.dk .bg .b3{opacity:.2}
+:root.dk .card{box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 18px 40px -24px rgba(0,0,0,.7)}
+:root.dk .cta{box-shadow:0 10px 30px -12px var(--acc)}
 .bg .b3{width:40vmax;height:40vmax;background:var(--b1,var(--acc));top:35vh;left:-15vmax;opacity:.1;animation:dr3 22s ease-in-out infinite alternate}
 @keyframes dr3{to{transform:translate(30vmax,-12vh) scale(1.25)}}
 .bg .b1{width:60vmax;height:60vmax;background:var(--b1,var(--acc));top:-25vmax;right:-20vmax;animation:dr1 26s ease-in-out infinite alternate}
@@ -260,6 +264,8 @@ button,input{font-family:inherit}
 .refs ul{margin:8px 0 0;padding-inline-start:18px;display:flex;flex-direction:column;gap:4px}
 .rfoot{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);padding:4px 2px}
 .rfoot b{color:var(--ink);direction:ltr;unicode-bidi:isolate}
+.rfoot .pg{display:inline-flex;align-items:center;padding:5px 10px;border-radius:10px;background:#F6F1E7;border:2px solid #1C1A17;box-shadow:3px 3px 0 #1C1A17}
+.rfoot .pg svg{width:64px;height:25px;display:block}
 .toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:60;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.on{opacity:1}
 /* الإطار الثابت: كرسي العيلة واسمها، والأزرار الثابتة */
@@ -337,12 +343,12 @@ button,input{font-family:inherit}
    <li><b>رجوع وقدّام:</b> الرجوع خطوة واحدة مع بقاء جوابك محفوظاً، و«قدّام» يعيدك إلى آخر خطوة وصلتها.</li>
    <li><b>حسابي:</b> تعديل اسمك وصورتك في أي وقت.</li>
    <li><b>فاتح وداكن</b>، و<b>«؟»</b> لهذه التعليمات.</li>
+   <li><b>نزّل التطبيق</b> من الغلاف: أيقونة «قعدة ساعتك» على موبايلك أو اللابتوب.</li>
   </ul>
   <h4>بعد النتيجة</h4>
   <ul>
    <li>صورة ستوري بثلاثة أشكال، فاتحة أو داكنة، تحفظها أو تشاركها مباشرة.</li>
    <li><b>نسخة أوفلاين:</b> ملف واحد يعمل على جهازك بلا إنترنت.</li>
-   <li><b>نزّل كتطبيق:</b> أيقونة «قعدة ساعتك» على شاشة موبايلك.</li>
   </ul>
   <h4>ماذا يعني كل عقرب؟</h4>
   <button class="ghost" data-gl="">شرح العقارب الخمسة</button>
@@ -426,7 +432,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 /* ===== الألوان ===== */
 const PAL={
  L:{bg:'#F4F5F8',ink:'#1D2230',mut:'#6E7385',card:'#FFFFFF',line:'#E2E4EB',acc:'#A6453B',i:{P:'#AE873A',N:'#6E5A80',H:'#3D7D77',F:'#5F6B7C',U:'#2F5A86'}},
- D:{bg:'#12151C',ink:'#E8E6E1',mut:'#9499A5',card:'#1A1E27',line:'#2B303C',acc:'#D0786C',i:{P:'#D2AE66',N:'#A891BB',H:'#7FB8B1',F:'#98A3B3',U:'#85A9D2'}}
+ D:{bg:'#0F1028',ink:'#F3F1FF',mut:'#A7ABD6',card:'#181A3A',line:'#2C2F5E',acc:'#FF7A59',i:{P:'#FFC24B',N:'#C08CFF',H:'#2FE3B5',F:'#B7C0E0',U:'#4FC3FF'}}
 };
 
 /* ===== العقارب الخمسة ===== */
@@ -584,7 +590,7 @@ function paint(){
  const r=document.documentElement,P=pal(isDark()?'dark':'light'),set=(k,v)=>r.style.setProperty(k,v);
  set('--paper',P.bg);set('--sheet',P.card);set('--line',P.line);set('--ink',P.ink);set('--muted',P.mut);set('--acc',P.acc);
  AX.forEach(k=>set('--a'+k,P.i[k]));
- r.style.colorScheme=isDark()?'dark':'light';
+ r.style.colorScheme=isDark()?'dark':'light';r.classList.toggle('dk',isDark());
  $('#thm').innerHTML=svg(isDark()?'sun':'moon');
  paintMotif();
 }
@@ -641,12 +647,7 @@ function drawIcon(x,X,Y,S){
  rr(x,0,0,200,200,46);x.fillStyle=FAM.color;x.fill();
  rr(x,21,19,168,72,16);x.fillStyle=INK;x.fill();
  rr(x,16,14,168,72,16);x.fillStyle=CRM;x.fill();x.strokeStyle=INK;x.lineWidth=4;x.stroke();
- x.save();const s=149.4/415;x.translate(25.3-96*s,21-101*s);x.scale(s,s);
- x.fillStyle=INK;LOGO_PARTS.forEach(p=>{rr(x,p[0]+8,p[1]+8,p[2],p[3],p[4]);x.fill()});
- LOGO_PARTS.forEach(p=>{rr(x,p[0],p[1],p[2],p[3],p[4]);x.fillStyle=MUS;x.fill();x.strokeStyle=INK;x.lineWidth=5;x.stroke()});
- x.font='400 160px Lalezar';x.direction='rtl';x.textAlign='start';x.textBaseline='alphabetic';x.fillStyle=INK;x.fillText('قـــعدة',460,220);
- [[395.5,'#B5483A',411.2],[429,'#3E5C76',444.7]].forEach(([px,c,dx])=>{rr(x,px,119.5,31.5,31.5,9.4);x.fillStyle=c;x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke();x.beginPath();x.arc(dx,135.3,2.4,0,7);x.fillStyle='rgba(0,0,0,.28)';x.fill()});
- x.restore();
+ drawLogo(x,25.3,21,149.4);
  const [cx,cy]=ART.c,r=ART.r;x.lineCap='round';
  ART.legs.forEach(l=>{x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(l[2],l[3]);x.strokeStyle=INK;x.lineWidth=6;x.stroke()});
  ART.bells.forEach(b=>{x.beginPath();x.arc(b[0],b[1],ART.br,0,7);x.fillStyle=MUS;x.fill();x.strokeStyle=INK;x.lineWidth=5;x.stroke()});
@@ -656,6 +657,21 @@ function drawIcon(x,X,Y,S){
  x.beginPath();x.arc(cx,cy,5,0,7);x.fillStyle=INK;x.fill();
  x.restore();
 }
+/* اللوغو الرسمي على الكانفس: X,Y أعلى يسار، W العرض */
+function drawLogo(x,X,Y,W){
+ x.save();const s=W/415;x.translate(X-96*s,Y-101*s);x.scale(s,s);
+ x.fillStyle=INK;LOGO_PARTS.forEach(p=>{rr(x,p[0]+8,p[1]+8,p[2],p[3],p[4]);x.fill()});
+ LOGO_PARTS.forEach(p=>{rr(x,p[0],p[1],p[2],p[3],p[4]);x.fillStyle=MUS;x.fill();x.strokeStyle=INK;x.lineWidth=5;x.stroke()});
+ x.font='400 160px Lalezar';x.direction='rtl';x.textAlign='start';x.textBaseline='alphabetic';x.fillStyle=INK;x.fillText('قـــعدة',460,220);
+ [[395.5,'#B5483A',411.2],[429,'#3E5C76',444.7]].forEach(([px,c,dx])=>{rr(x,px,119.5,31.5,31.5,9.4);x.fillStyle=c;x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke();x.beginPath();x.arc(dx,135.3,2.4,0,7);x.fillStyle='rgba(0,0,0,.28)';x.fill()});
+ x.restore();
+}
+/* اسم صفحة قعدة: اللوغو على ملصق كريمي، يمين بالزاوية R */
+const PAGE_NAME='قعدة';
+function pageSticker(x,R,cy,h){const lw=h*1.9,w=lw+h*.5,X=R-w,Y=cy-h/2;
+ rr(x,X+5,Y+5,w,h,h*.24);x.fillStyle=INK;x.fill();rr(x,X,Y,w,h,h*.24);x.fillStyle=CRM;x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke();
+ drawLogo(x,X+h*.25,Y+(h-lw*161/415)/2,lw);}
+const PAGE_HTML=`<span class="pg" aria-label="صفحة ${PAGE_NAME}"><svg viewBox="96 101 415 161">${LOGO_SVG}</svg></span>`;
 let chairImg=null;
 function loadChair(){return new Promise(res=>{if(chairImg)return res();const im=new Image();im.onload=()=>{chairImg=im;res()};im.onerror=()=>res();
  im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">${CHAIR}</svg>`)})}
@@ -693,6 +709,7 @@ function render(){
  else h=vResult();
  el.innerHTML=h;el.classList.remove('in');void el.offsetWidth;el.classList.add('in');
  if(st.t==='who')bindWho();
+ if(st.t==='cover'){const b=$('#cinst');if(b)b.onclick=install}
  if(st.t==='result')bindResult();
 }
 
@@ -727,7 +744,7 @@ function vCover(){
   <button class="glb" data-gl="">${svg('help')}ماذا يعني كل عقرب؟</button>
   <div class="tick" aria-hidden="true"><div class="tick-in">${row}${row}</div></div>
   <p class="meta"><b>30 عبارة</b> في 5 مراحل · نحو 4 دقائق</p>
-  <div class="nav" style="width:100%"><button class="cta" data-act="next">لنبدأ</button></div>
+  <div class="nav" style="width:100%"><button class="cta" data-act="next">لنبدأ</button>${standalone()?'':`<button class="ghost" id="cinst">${svg('app')}نزّل التطبيق على موبايلك</button>`}</div>
  </section>`;
 }
 function progress(st){
@@ -871,11 +888,14 @@ const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator
 async function install(){
  hit('install');
  if(deferredPrompt){deferredPrompt.prompt();try{await deferredPrompt.userChoice}catch(e){}deferredPrompt=null;return}
- const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const ua=navigator.userAgent,ios=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),android=/android/i.test(ua);
  const local=!/^https?:/.test(location.protocol);
- $('#imt').innerHTML=(local?`<p>التثبيت يعمل من رابط القعدة على الإنترنت. افتح الرابط من البايو، ثم:</p>`:'')+(ios
-  ?`<ol class="steps"><li>افتح الرابط في متصفح Safari.</li><li>اضغط زر المشاركة (مربع يخرج منه سهم) أسفل الشاشة.</li><li>اختر «إضافة إلى الشاشة الرئيسية».</li><li>اضغط «إضافة»، فتظهر أيقونة «قعدة ساعتك» بين تطبيقاتك.</li></ol>`
-  :`<ol class="steps"><li>افتح قائمة المتصفح (النقاط الثلاث ⋮).</li><li>اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».</li><li>وافق، فتظهر أيقونة «قعدة ساعتك» بين تطبيقاتك.</li></ol>`);
+ const G={ios:['آيفون وآيباد',`<ol class="steps"><li>افتح رابط القعدة في متصفح Safari.</li><li>اضغط زر المشاركة (مربع يخرج منه سهم) أسفل الشاشة.</li><li>اختر «إضافة إلى الشاشة الرئيسية»، ثم «إضافة».</li></ol>`],
+  android:['أندرويد',`<ol class="steps"><li>افتح رابط القعدة في Chrome.</li><li>اضغط النقاط الثلاث ⋮ أعلى الشاشة.</li><li>اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية»، ثم وافق.</li></ol>`],
+  pc:['اللابتوب',`<ol class="steps"><li>افتح رابط القعدة في Chrome أو Edge.</li><li>اضغط أيقونة التثبيت في شريط العنوان (شاشة صغيرة وسهم)، أو من القائمة ⋮ اختر «تثبيت قعدة ساعتك».</li><li>وافق، فتفتح القعدة بنافذة خاصة وتظهر بين برامجك.</li></ol>`]};
+ const order=ios?['ios','android','pc']:android?['android','ios','pc']:['pc','ios','android'];
+ $('#imt').innerHTML=(local?`<p>التثبيت يعمل من رابط القعدة على الإنترنت (الرابط في البايو).</p>`:`<p>تظهر بعدها أيقونة «قعدة ساعتك» بين تطبيقاتك، وتفتح بلا متصفح.</p>`)
+  +order.map((k,i)=>`<h4>${i===0?'جهازك: ':''}${G[k][0]}</h4>${G[k][1]}`).join('');
  openLayer('#im');
 }
 $('#imok').onclick=()=>{$('#im').hidden=true};
@@ -944,16 +964,16 @@ function vResult(){
    <li>الساعة المتوازنة ونسبة التوازن <span class="lt">(Zimbardo &amp; Boyd, 2008; Stolarski et al., 2011)</span>.</li>
    <li>كل عقرب يُقاس بست عبارات، بعضها معكوس.</li>
    <li>النتيجة للتأمل والاكتشاف، لا للتشخيص.</li></ul></details>
-  <div class="card"><h3>خذ القعدة معك</h3><div class="acts"><button class="ghost" id="offl">${svg('dl')}نزّل نسخة أوفلاين</button>${standalone()?'':`<button class="ghost" id="inst">${svg('app')}نزّل كتطبيق</button>`}</div><p class="hint">النسخة الأوفلاين ملف واحد يعمل على جهازك بلا إنترنت. والتطبيق يضع أيقونة «قعدة ساعتك» على شاشة موبايلك.</p></div>
+  <div class="card"><h3>خذ القعدة معك</h3><div class="acts"><button class="ghost" id="offl">${svg('dl')}نزّل نسخة أوفلاين</button></div><p class="hint">النسخة الأوفلاين ملف واحد يعمل على جهازك بلا إنترنت، حتى لو أرسلته لغيرك.</p></div>
   <button class="ghost" data-act="restart">${svg('redo')}ابدأ من جديد</button>
-  <div class="rfoot"><b>@eyad.hloubi</b><span>إعداد م. إياد حلوبي</span></div>
+  <div class="rfoot">${PAGE_HTML}<b>@eyad.hloubi</b></div>
  </section>`;
 }
 function bindResult(){
  requestAnimationFrame(()=>setTimeout(()=>$$('[data-w]').forEach(i=>i.style.width=i.dataset.w+'%'),60));
  $$('.lay').forEach(b=>b.onclick=()=>{S.lay=b.dataset.lay;$$('.lay').forEach(x=>x.classList.toggle('on',x===b));drawPreview()});
  $$('[data-st]').forEach(b=>b.onclick=()=>{S.stTheme=b.dataset.st;$$('[data-st]').forEach(x=>x.classList.toggle('on',x===b));drawAll()});
- $('#save').onclick=saveImg;$('#share').onclick=shareFriends;$('#offl').onclick=offline;const ib=$('#inst');if(ib)ib.onclick=install;
+ $('#save').onclick=saveImg;$('#share').onclick=shareFriends;$('#offl').onclick=offline;
  drawAll(true);
 }
 
@@ -1093,12 +1113,9 @@ function resBlock(x,P,y,mw,o){
 function shadowCard(x,P,X,Y,W,H,r){x.save();x.shadowColor='rgba(0,0,0,.14)';x.shadowBlur=60;x.shadowOffsetY=24;rr(x,X,Y,W,H,r);x.fillStyle=P.card;x.fill();x.restore();rr(x,X,Y,W,H,r);x.strokeStyle=P.line;x.lineWidth=2;x.stroke()}
 /* سطر الهوية بالأسفل: أيقونة القعدة واسمها، وكرسي العيلة، والحساب */
 function brandRow(x,P,y,L,R){
- L=L||80;R=R||1000;const s=100;
- drawIcon(x,R-s,y,s);
- txt(x,{t:'قعدة ساعتك',s:40,w:800,f:FD,c:P.ink,x:R-s-22,y:y+8,mw:420,al:'right'});
- if(chairImg)x.drawImage(chairImg,R-s-22-36,y+58,36,36);
- txt(x,{t:FAM.name,s:26,w:600,c:P.mut,x:R-s-22-46,y:y+64,mw:360,al:'right'});
- x.save();x.direction='ltr';x.textAlign='left';x.textBaseline='middle';x.font=`600 34px ${FT}`;x.fillStyle=P.ink;x.fillText('@eyad.hloubi',L,y+s/2);x.restore();
+ L=L||80;R=R||1000;const cy=y+50;
+ pageSticker(x,R,cy,76);
+ x.save();x.direction='ltr';x.textAlign='left';x.textBaseline='middle';x.font=`600 34px ${FT}`;x.fillStyle=P.ink;x.fillText('@eyad.hloubi',L,cy);x.restore();
 }
 function drawStory(lay,theme){
  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const x=cv.getContext('2d');
@@ -1108,6 +1125,7 @@ function drawStory(lay,theme){
   /* ساعة حائط: الصورة على عرض الصورة فوق، والساعة بطلة الصورة جوّا بطاقة */
   const ph=560;
   face(x,P,0,0,1080,ph,k);
+  drawIcon(x,1080-80-112,ST_T,112);
   const gr=x.createLinearGradient(0,ph-300,0,ph);gr.addColorStop(0,P.bg+'00');gr.addColorStop(1,P.bg);x.fillStyle=gr;x.fillRect(0,ph-300,1080,302);
   if(S.name){x.save();x.shadowColor=P.bg;x.shadowBlur=34;txt(x,{t:S.name,s:100,w:800,f:FD,c:P.ink,x:540,y:470,mw:960,min:56});y=txt(x,{t:S.name,s:100,w:800,f:FD,c:P.ink,x:540,y:470,mw:960,min:56})+18;x.restore()}else y=ph+10;
   y=resBlock(x,P,y,960);
@@ -1123,6 +1141,7 @@ function drawStory(lay,theme){
   if(S.name)txt(x,{t:S.name,s:62,w:800,f:FD,c:'#1D2230',x:0,y:-pht/2+32+ps+24,mw:ps,min:36});
   x.save();x.translate(0,-pht/2-6);x.rotate(.06);x.fillStyle=lc;x.globalAlpha=.55;x.fillRect(-84,-22,168,44);x.restore();
   x.restore();
+  drawIcon(x,80,ST_T,112);
   y=resBlock(x,P,py+pht+44,960,{label:false});
   clock(x,P,60,y+18,960,1550-(y+18),CUR,28,1,0);
   brandRow(x,P,ST_B-100);
@@ -1133,7 +1152,7 @@ function drawStory(lay,theme){
   x.save();rr(x,L,T,W,H,R2);x.clip();x.fillStyle=lc;x.fillRect(L,T,W,232);
   x.globalAlpha=.14;x.strokeStyle='#fff';x.lineWidth=3;for(let i=-4;i<30;i++){x.beginPath();x.moveTo(L+i*44,T);x.lineTo(L+i*44+232,T+232);x.stroke()}x.globalAlpha=1;x.restore();
   txt(x,{t:'تذكرة زمن',s:36,w:800,f:FD,c:bt,x:L+W-52,y:ST_T+6,mw:400,al:'right'});
-  txt(x,{t:'محطة واحدة: ساعتي',s:26,w:600,c:bt,x:L+52,y:ST_T+12,mw:400,al:'left'});
+  drawIcon(x,L+44,ST_T-8,100);
   const r=96,cy=T+232+20;avatar(x,P,540,cy,r,k);
   y=cy+r+40;
   if(S.name)y=txt(x,{t:S.name,s:76,w:800,f:FD,c:P.ink,x:540,y,mw:860,min:46})+18;
